@@ -42,9 +42,14 @@ resource "aws_cognito_identity_pool" "main" {
   identity_pool_name               = "identity pool"
   allow_unauthenticated_identities = true
   //This needs to get changed to cognito user pool app client id
-  supported_login_providers {
+cognito_identity_providers {
+  provider_name = "cognito-idp.us-east-1.amazonaws.com/${aws_cognito_user_pool_client.client.user_pool_id}"
+  client_id = "${aws_cognito_user_pool_client.client.id}"
+}
+
+  /*supported_login_providers {
     "graph.facebook.com" = "7346241598935555"
-  }
+  }*/
 }
 
 resource "aws_iam_role" "authenticated" {
