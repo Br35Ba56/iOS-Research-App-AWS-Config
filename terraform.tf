@@ -47,6 +47,45 @@ resource "aws_cognito_identity_pool" "main" {
   }
 }
 
+resource "aws_iam_role" "unauthenticated" {
+  name = "NFP_Breastfeeding_Cognito_Unauthenticated"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Federated": "cognito-identity.amazonaws.com"
+        },
+        "Action": "sts:AssumeRoleWithWebIdentity",
+        "Condition": {
+          "StringEquals": {
+            "cognito-identity.amazonaws.com:aud": "${aws_cognito_identity_pool.main.id}"
+          },
+          "ForAnyValue:StringLike": {
+            "cognito-identity.amazonaws.com:amr": "unauthenticated"
+          }
+        }
+      }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "unauthenticated_cognito_get_id" {
+  name = "cognito_get_id"
+  role = "${aws_iam_role.unauthenticated.id}"
+  policy = "${aws_iam_role_policy.authenticated_cognito_get_id.policy}"
+}
+
+resource "aws_iam_role_policy" "unauthenticated_mobile_analytics" {
+  name = "mobile_analytics"
+  role = "${aws_iam_role.unauthenticated.id}"
+  policy = "${aws_iam_role_policy.authenticated_mobile_analytics.policy}"
+}
+
 resource "aws_iam_role" "authenticated" {
   name = "NFP_Breastfeeding_Cognito_Authenticated"
 
@@ -105,23 +144,7 @@ resource "aws_iam_role_policy" "authenticated_cognito_get_id" {
 resource "aws_iam_role_policy" "authenticated_s3_put_object" {
   name = "s3_put_object_policy"
   role = "${aws_iam_role.authenticated.id}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject"
-      ],
-      "Resource": [
-        "arn:aws:s3:::nfpbreastfeedingrese-deployments-mobilehub-128695951"
-      ]
-    }
-  ]
-}
-EOF
+  policy = "${data.aws_iam_policy_document.s3_put_object.json}"
 }
 
 //Mobile analytics is now amazon pinpoint, use AWS CLI command:
@@ -160,6 +183,28 @@ resource "aws_iam_role_policy" "authenticated_mobile_analytics" {
 EOF
 }
 
+data "aws_iam_policy_document" "cognito_get_id" {
+  statement {
+    actions = [
+      "cognito-identity:GetId"
+    ]
+    resources = [
+      "arn:aws:cognito-identity:*:*:identityPool/${aws_cognito_identity_pool.main.id}",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "s3_put_object" {
+  statement {
+    actions = [
+      "s3:PutObject"
+    ]
+    resources = [
+      "${aws_s3_bucket.survey.arn}"
+    ]
+  }
+}
+
 resource "aws_cognito_identity_pool_roles_attachment" "main" {
   identity_pool_id = "${aws_cognito_identity_pool.main.id}"
 
@@ -181,13 +226,15 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   }
 }
 
-data "aws_iam_policy_document" "cognito_get_id" {
-  statement {
-    actions = [
-      "cognito-identity:GetId"
-    ]
-    resources = [
-      "arn:aws:cognito-identity:*:*:identityPool/${aws_cognito_identity_pool.main.id}",
-    ]
-  }
+resource "aws_s3_bucket" "survey" {
+  bucket = "nfpbreastfeedingsurveybucket-${random_id.idkey.hex}"
+  acl    = "private"
+}
+
+resource "random_id" "idkey" {
+   byte_length = 4
+}
+
+output "idkey" {
+   value = "${random_id.idkey.hex}"
 }
