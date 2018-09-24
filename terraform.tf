@@ -1,3 +1,43 @@
+//Will need to add SMS role to allow cognito to verify via SMS in the future.
+
+resource "aws_cognito_user_pool" "pool" {
+  name = "NFP_Breastfeeding_Pool"
+  username_attributes = ["email"]
+  email_verification_subject = "Your verification code"
+  email_verification_message = "Your verification code is {####}."
+  auto_verified_attributes   = ["email"]
+
+  password_policy {
+    minimum_length = 8
+    require_lowercase = true
+    require_uppercase = true
+    require_numbers = true
+    require_symbols = true
+  }
+
+  schema {
+   attribute_data_type      = "String"
+   developer_only_attribute = false
+   mutable                  = false
+   name                     = "email"
+   required                 = true
+  }
+
+  schema {
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true
+    name                     = "phone_number"
+    required                 = true
+  }
+}
+
+resource "aws_cognito_user_pool_client" "client" {
+  name = "NFP_Breast_Feading_User_Pool_Client"
+  generate_secret = true
+  user_pool_id = "${aws_cognito_user_pool.pool.id}"
+}
+
 resource "aws_cognito_identity_pool" "main" {
   identity_pool_name               = "identity pool"
   allow_unauthenticated_identities = true
