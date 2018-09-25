@@ -200,7 +200,7 @@ data "aws_iam_policy_document" "s3_put_object" {
       "s3:PutObject"
     ]
     resources = [
-      "${aws_s3_bucket.survey.arn}"
+      "${aws_s3_bucket.survey.arn}/*"
     ]
   }
 }
@@ -223,12 +223,20 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
 
   roles {
     "authenticated" = "${aws_iam_role.authenticated.arn}"
+    "unauthenticated" = "${aws_iam_role.unauthenticated.arn}"
   }
 }
 
 resource "aws_s3_bucket" "survey" {
   bucket = "nfpbreastfeedingsurveybucket-${random_id.idkey.hex}"
   acl    = "private"
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
 }
 
 resource "random_id" "idkey" {
