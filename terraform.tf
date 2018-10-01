@@ -156,31 +156,28 @@ resource "aws_iam_role_policy" "authenticated_mobile_analytics" {
   name = "mobile_analytics_put_event"
   role = "${aws_iam_role.authenticated.id}"
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "mobileanalytics:PutEvents"
-      ],
-      "Resource": [
-        "*"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "mobiletargeting:UpdateEndpoint"
-      ],
-      "Resource": [
-        "arn:aws:mobiletargeting:*:551307643672:apps/69lvutlebj6jpn19pmiv9rep7a"
-      ]
-    }
-  ]
+  policy = "${data.aws_iam_policy_document.pinpoint_put_events.json}"
 }
-EOF
+variable "pinpointID" {}
+
+data "aws_iam_policy_document" "pinpoint_put_events" {
+  statement {
+    actions = [
+      "mobileanalytics:PutEvents"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    actions = [
+      "mobiletargeting:UpdateEndpoint"
+    ]
+    resources = [
+      "arn:aws:mobiletargeting:*:551307643672:apps/${var.pinpointID}"
+    ]
+  }
 }
 
 data "aws_iam_policy_document" "cognito_get_id" {
@@ -241,8 +238,4 @@ resource "aws_s3_bucket" "survey" {
 
 resource "random_id" "idkey" {
    byte_length = 4
-}
-
-output "idkey" {
-   value = "${random_id.idkey.hex}"
 }
