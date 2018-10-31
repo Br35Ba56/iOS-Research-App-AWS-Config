@@ -1,0 +1,7 @@
+DoNotCommit.swift
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+*.tfvar
+.terraform
