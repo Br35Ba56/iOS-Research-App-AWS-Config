@@ -30,6 +30,9 @@ resource "aws_cognito_user_pool" "pool" {
     name                     = "phone_number"
     required                 = true
   }
+  lifecycle {
+    ignore_changes = ["schema"]
+  }
 }
 
 resource "aws_cognito_user_pool_client" "client" {
@@ -47,6 +50,24 @@ resource "aws_cognito_identity_pool" "main" {
   }
 }
 
+resource "aws_s3_bucket" "survey" {
+  bucket = "nfpbreastfeedingsurveybucket-${random_id.idkey.hex}"
+  acl    = "private"
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+  lifecycle {
+    ignore_changes = ["bucket"]
+  }
+}
+
+resource "random_id" "idkey" {
+   byte_length = 4
+}
 resource "aws_iam_role" "unauthenticated" {
   name = "NFP_Breastfeeding_Cognito_Unauthenticated"
 
@@ -147,11 +168,6 @@ resource "aws_iam_role_policy" "authenticated_s3_put_object" {
   policy = "${data.aws_iam_policy_document.s3_put_object.json}"
 }
 
-//Mobile analytics is now amazon pinpoint, use AWS CLI command:
-//aws pinpoint create-app --create-application-request Name="Mobile App"
-//This will create an app where the ID will be added to resources in the
-//following iam role.  This can be done in the script that calls terraform apply
-
 resource "aws_iam_role_policy" "authenticated_mobile_analytics" {
   name = "mobile_analytics_put_event"
   role = "${aws_iam_role.authenticated.id}"
@@ -224,18 +240,3 @@ resource "aws_cognito_identity_pool_roles_attachment" "main" {
   }
 }
 
-resource "aws_s3_bucket" "survey" {
-  bucket = "nfpbreastfeedingsurveybucket-${random_id.idkey.hex}"
-  acl    = "private"
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
-}
-
-resource "random_id" "idkey" {
-   byte_length = 4
-}

@@ -12,11 +12,8 @@ data = ""
 with open('./NFPAppConfig/AWS_Config.swift', 'r') as myfile:
   data = myfile.read()
 
-print(output_values)
-
 for key in output_values.keys():
     data = data.replace(key.strip(), output_values[key])
-print(data)
 
 file = open('./NFPAppConfig/DoNotCommit.swift', 'w')
 file.write(data)

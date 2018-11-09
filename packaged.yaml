@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "NFP Breastfeeding SAM \n"
+Globals:
+  Function:
+    Timeout: 20
+Outputs:
+  DisableUserFunction:
+    Description: Disable User Function ARN
+    Value:
+      Fn::GetAtt:
+      - DisableUserFunction
+      - Arn
+  DisableUserFunctionIamRole:
+    Description: Implicit IAM Role created for Disable User function
+    Value:
+      Fn::GetAtt:
+      - DisableUserFunction
+      - Arn
+  NFPBreastFeedingApi:
+    Description: API Gateway endpoint URL for Dev stage for Disable User Function
+    Value:
+      Fn::Sub: https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Dev/cognito/disableuser
+Resources:
+  Api:
+    Properties:
+      DefinitionBody:
+        Parameters:
+          DisableUserFunction:
+            Type: String
+        basePath: /
+        definitions:
+          Error:
+            properties:
+              code:
+                format: int32
+                type: integer
+              fields:
+                type: string
+              message:
+                type: string
+          cognitouser:
+            maxProperties: '2'
+            properties:
+              required:
+              - username
+              - userpool
+              username:
+                type: string
+              userpool:
+                type: string
+            title: Cognito Disable User
+            type: object
+        host: execute-api.us-east-1.amazonaws.com
+        info:
+          description: NFP App API for Backend Serverless Functions
+          title: NFP Breast Feeding API
+          version: 1.0.0
+        paths:
+          /cognito/disableuser:
+            post:
+              consumes:
+              - application/json
+              description: Definition of cognito user
+              name: body
+              parameters:
+              - in: body
+              produces:
+              - application/json
+              responses:
+                '200':
+                  description: The result of disabling a cognito user.
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                '400':
+                  description: Bad request
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#/definitions/Error'
+                '500':
+                  description: Internal error
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#/definitions/Error'
+              schema:
+                $ref: '#/definitions/cognitouser'
+              summary: disable a user
+              tags:
+              - cognito
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                responses:
+                  BAD.*:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '400'
+                  INT.*:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '500'
+                  default:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '200'
+                type: aws
+                uri:
+                  Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations
+              x-amazon-apigateway-request-validator: Validate body
+        produces:
+        - application/json
+        schemes:
+        - https
+        swagger: '2.0'
+        x-amazon-apigateway-request-validators:
+          Validate body:
+            validateRequestBody: true
+            validateRequestParameters: false
+      StageName: NFPBreastFeedingAPI
+    Type: AWS::Serverless::Api
+  DisableUserFunction:
+    Properties:
+      CodeUri: s3://serverlesssambucket123454321/b77564a1739cb4f8bdea05cbd8863ba0
+      Events:
+        disableuser:
+          Properties:
+            Method: POST
+            Path: /cognito/disableuser
+            RestApiId:
+              Ref: Api
+          Type: Api
+      Handler: nfpbreastfeedingcognitouserdisable.cognito.ProxyWithStream::handleRequest
+      Runtime: java8
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

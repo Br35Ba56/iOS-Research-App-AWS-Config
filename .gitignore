@@ -5,3 +5,9 @@ DoNotCommit.swift
 *.tfstate.*
 *.tfvar
 .terraform
+
+*.class
+*.jar
+target/
+.settings/
+*.classpath
