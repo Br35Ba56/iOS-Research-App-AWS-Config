@@ -55,7 +55,7 @@ Resources:
                       type: "string"
               x-amazon-apigateway-request-validator: "Validate body"
               x-amazon-apigateway-integration:
-                uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:nfpbreastfeedingserverlessstac-DisableUserFunction-12K1RAY8SXI18/invocations"
+                uri: !Sub "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations"
                 responses:
                   BAD.*:
                     statusCode: "400"
