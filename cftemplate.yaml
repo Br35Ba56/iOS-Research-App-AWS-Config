@@ -62,19 +62,19 @@ Resources:
               produces:
               - application/json
               responses:
-                '200':
+                200:
                   description: 200 response
                   headers:
                     Access-Control-Allow-Origin:
                       type: string
-                '400':
+                400:
                   description: 400 response
                   headers:
                     Access-Control-Allow-Origin:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
-                '500':
+                500:
                   description: 500 response
                   headers:
                     Access-Control-Allow-Origin:
@@ -121,38 +121,6 @@ Resources:
               Ref: Api
           Type: Api
       Handler: nfpbreastfeedingcognitouserdisable.cognito.ProxyWithStream::handleRequest
-      Role:
-        Fn::GetAtt:
-        - IAMDisableCognitoUser
-        - Arn
       Runtime: java8
     Type: AWS::Serverless::Function
-  IAMDisableCognitoUser:
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-        - Action:
-          - sts::AssumeRole
-          Effect: Allow
-          Principal:
-            Service: lambda.amazonaws.com
-        Version: '2012-10-17'
-      Policies:
-      - PolicyDocument:
-          Statement:
-          - Action: cognito-idp:AdminDisableUser
-            Effect: Allow
-            Resource: arn:aws:cognito-idp:us-east-1:*:userpool/*
-          Version: '2012-10-17'
-        PolicyDoucment:
-          Statement:
-          - Action:
-            - logs:CreateLogGroup
-            - logs:CreateLogStream
-            - logs:PutLogEvents
-            Effect: Allow
-            Resource: arn:aws:logs:*:*:*"
-          Version: '2012-10-17'
-        PolicyName: LambdaBasicExecutionRole
-    Type: AWS::IAM::Role
 Transform: AWS::Serverless-2016-10-31

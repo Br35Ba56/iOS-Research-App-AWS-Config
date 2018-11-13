@@ -1,7 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'sam-app
-
-  Sample SAM Template for sam-app
+Description: 'NFP Breastfeeding SAM
 
   '
 Globals:
@@ -21,17 +19,14 @@ Outputs:
       - DisableUserFunction
       - Arn
   NFPBreastFeedingApi:
-    Description: API Gateway endpoint URL for Dev stage for Hello World function
+    Description: API Gateway endpoint URL for Dev stage for Disable User Function
     Value:
       Fn::Sub: https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Dev/cognito/disableuser
 Resources:
   Api:
     Properties:
       DefinitionBody:
-        Parameters:
-          DisableUserFunction:
-            Type: String
-        basePath: /
+        basePath: /NFPBreastFeedingAPI
         definitions:
           Error:
             properties:
@@ -43,20 +38,14 @@ Resources:
               message:
                 type: string
           cognitouser:
-            maxProperties: '2'
             properties:
-              required:
-              - username
-              - userpool
               username:
                 type: string
               userpool:
                 type: string
             title: Cognito Disable User
             type: object
-        host: execute-api.us-east-1.amazonaws.com
         info:
-          description: NFP App API for Backend Serverless Functions
           title: NFP Breast Feeding API
           version: 1.0.0
         paths:
@@ -64,39 +53,37 @@ Resources:
             post:
               consumes:
               - application/json
-              description: New user details.
-              name: body
               parameters:
               - in: body
+                name: cognitouser
+                required: true
+                schema:
+                  $ref: '#/definitions/cognitouser'
               produces:
               - application/json
               responses:
                 '200':
-                  description: The username of the new user and set of temporary credentials
+                  description: 200 response
                   headers:
                     Access-Control-Allow-Origin:
                       type: string
                 '400':
-                  description: Bad request
+                  description: 400 response
                   headers:
                     Access-Control-Allow-Origin:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
                 '500':
-                  description: Internal error
+                  description: 500 response
                   headers:
                     Access-Control-Allow-Origin:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
-              schema:
-                $ref: '#/definitions/cognitouser'
-              summary: disable a user
-              tags:
-              - cognito
               x-amazon-apigateway-integration:
                 httpMethod: POST
+                passthroughBehavior: when_no_match
                 responses:
                   BAD.*:
                     responseParameters:
@@ -111,11 +98,8 @@ Resources:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
                     statusCode: '200'
                 type: aws
-                uri:
-                  Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations
+                uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:nfpbreastfeedingserverlessstac-DisableUserFunction-12K1RAY8SXI18/invocations
               x-amazon-apigateway-request-validator: Validate body
-        produces:
-        - application/json
         schemes:
         - https
         swagger: '2.0'
@@ -137,6 +121,39 @@ Resources:
               Ref: Api
           Type: Api
       Handler: nfpbreastfeedingcognitouserdisable.cognito.ProxyWithStream::handleRequest
+      Role:
+        Fn::GetAtt:
+        - IAMDisableUserFunctionRole
+        - Arn
       Runtime: java8
     Type: AWS::Serverless::Function
+  IAMDisableUserFunctionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action: cognito-idp:AdminDisableUser
+            Effect: Allow
+            Resource: arn:aws:cognito-idp:us-east-1:*:userpool/*
+          Version: '2012-10-17'
+        PolicyName: DisableCognitoUser
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Effect: Allow
+            Resource: arn:aws:logs:*:*:*"
+          Version: '2012-10-17'
+        PolicyName: LambdaBasicExecutionRole
+    Type: AWS::IAM::Role
 Transform: AWS::Serverless-2016-10-31

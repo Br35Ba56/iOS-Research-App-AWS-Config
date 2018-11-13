@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    NFP Breastfeeding SAM 
+
+Globals:
+    Function:
+        Timeout: 20
+# main template
+Resources:
+    Api:
+        Type: AWS::Serverless::Api
+        Properties: 
+            StageName: NFPBreastFeedingAPI
+            DefinitionBody:
+                swagger: '2.0'
+                info: 
+                    title: NFP Breast Feeding API
+                    description: NFP App API for Backend Serverless Functions
+                    version: "1.0.0"
+                # array of schemes
+                schemes:
+                - https
+                # will be prefixed to all paths
+                basePath: /
+                produces:
+                - application/json
+                paths:
+                    /cognito/disableuser:
+                        post:
+                            summary: disable a user
+                            consumes:
+                            - "application/json"
+                            produces:
+                            - "application/json"
+                            parameters:
+                            - in: "body"
+                              name: "cognitouser"
+                              required: true
+                              schema:
+                                $ref: "#/definitions/cognitouser"  
+                            responses:
+                                200:
+                                    description: "200 response"
+                                    headers:
+                                        Access-Control-Allow-Origin:
+                                            type: "string"
+                            x-amazon-apigateway-request-validator: "Validate body"
+                            x-amazon-apigateway-integration:
+                                type: aws
+                                uri: !Sub 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations'
+                                httpMethod: "POST"
+                                passthroughBehavior: "when_no_match"
+                                responses:
+                                    "default":
+                                        statusCode: "200"
+                                        responseParameters:
+                                            method.response.header.Access-Control-Allow-Origin : "'*'"
+                                    "BAD.*":
+                                        statusCode: "400"
+                                        responseParameters:
+                                            method.response.header.Access-Control-Allow-Origin : "'*'"
+                                    "INT.*":
+                                        statusCode: "500"
+                                        responseParameters:
+                                            method.response.header.Access-Control-Allow-Origin : "'*'"
+                definitions:
+                    cognitouser:
+                        title: Cognito Disable User
+                        type: object
+                        maxProperties: "2"
+                        
+                        properties:
+                            username:
+                                type: string
+                            userpool:
+                                type: string
+                            required:
+                            - username
+                            - userpool
+                    Error:
+                        properties:
+                            code:
+                                type: integer
+                                format: int32
+                            message:
+                                type: string
+                            fields:
+                                type: string
+                x-amazon-apigateway-request-validators: 
+                    Validate body:
+                        validateRequestParameters: false
+                        validateRequestBody: true
+    DisableUserFunction:
+        Type: AWS::Serverless::Function 
+        Properties:
+            CodeUri: target/cognito-1.0.0.jar
+            Handler: nfpbreastfeedingcognitouserdisable.cognito.ProxyWithStream::handleRequest
+            Runtime: java8
+            Events:
+                disableuser:
+                    Type: Api 
+                    Properties:
+                        Path: /cognito/disableuser
+                        Method: POST
+                        RestApiId: !Ref Api
+
+Outputs:
+    NFPBreastFeedingApi:
+        Description: "API Gateway endpoint URL for Dev stage for Disable User Function"
+        Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Dev/cognito/disableuser"
+
+    DisableUserFunction:
+      Description: "Disable User Function ARN"
+      Value: !GetAtt DisableUserFunction.Arn
+
+    DisableUserFunctionIamRole:
+      Description: "Implicit IAM Role created for Disable User function"
+      Value: !GetAtt DisableUserFunction.Arn

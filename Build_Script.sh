@@ -23,8 +23,6 @@ terraform_output=$(terraform output);
 
 python3 terraform_out_to_app_config.py "$terraform_output"
 
-sam package --template-file ./sam-app/template.yaml --s3-bucket serverlesssambucket123454321 --output-template-file packaged.yaml
+sam package --template-file ./sam-app/template.yaml --s3-bucket serverlesssambucket123454321 --output-template-file ./sam-app/packaged.yaml
 
 aws cloudformation deploy --template-file ./sam-app/packaged.yaml --stack-name nfpbreastfeedingserverlessstack --capabilities CAPABILITY_IAM
-
-aws pinpoint delete-app --application-id $PINPOINTID
