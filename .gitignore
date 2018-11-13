@@ -11,3 +11,5 @@ DoNotCommit.swift
 target/
 .settings/
 *.classpath
+
+*.DS_Store
