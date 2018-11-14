@@ -112,7 +112,7 @@ Resources:
     Type: AWS::Serverless::Api
   DisableUserFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/b77564a1739cb4f8bdea05cbd8863ba0
+      CodeUri: s3://serverlesssambucket123454321/228fba59eda964ca587a2c5261f7dac8
       Events:
         disableuser:
           Properties:
