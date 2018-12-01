@@ -1,4 +1,4 @@
-package nfpbreastfeedingcognitouserdisable.cognito;
+package nfpbreastfeedinglambdas.cognitouserdisable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +25,7 @@ import org.json.simple.parser.*;
 
 
 
-public class ProxyWithStream implements RequestStreamHandler {
+public class DisableUserHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
     
     private static AWSCognitoIdentityProvider provider =  AWSCognitoIdentityProviderClientBuilder.standard()
@@ -42,26 +42,33 @@ public class ProxyWithStream implements RequestStreamHandler {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         JSONObject responseJson = new JSONObject();
    
-        String responseCode = "200";
+        int responseCode = 200;
 
         try {
             JSONObject event = (JSONObject)parser.parse(reader);
-            System.out.println(event);
-           
-           
+            logger.log("Hello, here is the event: " + event.toJSONString());
+            //logger.log(event.toJSONString());
+            CognitoUser cognitoUser = new CognitoUser();
+            
             if (event.get("body") != null) {
                 JSONObject body = (JSONObject)parser.parse((String)event.get("body"));
-                System.out.println("JSON body"+body);
+                logger.log("JSON body"+body);
+                cognitoUser.setUserName(body.get("username").toString());
+                cognitoUser.setCognitoPoolID(body.get("userpool").toString());
             }
            
-            CognitoUser cognitoUser = new CognitoUser();
-            cognitoUser.setUserName(event.get("username").toString());
-            cognitoUser.setCognitoPoolID(event.get("userpool").toString());
             //Disable User in cognito
-            AdminDisableUserRequest adminDisableUserRequest = new AdminDisableUserRequest();
-            adminDisableUserRequest.setUsername(cognitoUser.getUserName());
-            adminDisableUserRequest.setUserPoolId(cognitoUser.getCognitoPoolID());
-            provider.adminDisableUser(adminDisableUserRequest);
+            boolean isDisabled = true;
+            try {
+                AdminDisableUserRequest adminDisableUserRequest = new AdminDisableUserRequest();
+                adminDisableUserRequest.setUsername(cognitoUser.getUserName());
+                adminDisableUserRequest.setUserPoolId(cognitoUser.getCognitoPoolID());
+                provider.adminDisableUser(adminDisableUserRequest);
+            } catch (Exception e) {
+                isDisabled = false;
+                logger.log(e.toString());
+            }
+            
             
             JSONObject responseBody = new JSONObject();
             responseBody.put("input", event.toJSONString());
@@ -72,11 +79,17 @@ public class ProxyWithStream implements RequestStreamHandler {
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
             responseJson.put("headers", headerJson);
-            responseJson.put("body", responseBody.toString());  
+            if (isDisabled) {
+                responseJson.put("body", "{\"disabled\" : \"true\"}");  
+            } else {
+                responseJson.put("body", "{\"disabled\" : \"false\"}");
+            }
+            
 
         } catch(ParseException pex) {
-            responseJson.put("statusCode", "403");
+            responseJson.put("statusCode", 403);
             responseJson.put("exception", pex);
+            
         }
 
         logger.log(responseJson.toJSONString());
