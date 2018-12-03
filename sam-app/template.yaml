@@ -21,7 +21,7 @@ Resources:
         schemes:
         - "https"
         paths:
-          /surveys/weeklysurvey/upload:
+          /surveys/weeklysurvey:
             put:
               consumes:
               - "application/json"
@@ -72,7 +72,7 @@ Resources:
                 passthroughBehavior: "when_no_match"
                 httpMethod: "POST"
                 type: "aws"
-          /surveys/dailysurvey/upload:
+          /surveys/dailysurvey:
             put:
               consumes:
               - "application/json"
