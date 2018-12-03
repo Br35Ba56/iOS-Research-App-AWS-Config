@@ -1,0 +1,117 @@
+{
+  "type" : "object",
+  "oneOf" :[
+    {
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "type" : {
+            "type" : "string"
+        },
+        "clearBlueMonitor": {
+          "type": "string"
+        },
+        "experienceBleeding" : {
+            "type": "string"
+        },
+        "menstruation" : {
+            "type" : "string"
+        },
+        "progesterone" : {
+            "type" : "string"
+        },
+        "numOfTimesBabyBreastFed" : {
+            "type" : "string"
+        },
+        "numOfTimesBabyExpressFed" : {
+            "type" : "string"
+        },
+        "numOfTimesBabyFormulaFed" : {
+            "type" : "string"
+        }
+      },
+      "required": [
+        "userName",
+        "date",
+        "type",
+        "clearBlueMonitor",
+        "experienceBleeding",
+        "menstruation",
+        "progesterone",
+        "numOfTimesBabyBreastFed",
+        "numOfTimesBabyExpressFed",
+        "numOfTimesBabyFormulaFed"
+      ]
+    },
+    {
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "date" : {
+            "type" : "string"
+        },
+        "type" : {
+            "type" : "string"
+        },
+        "areYouPregnant" : {
+            "type" : "string"
+        },
+        "didMenstruateThisWeek" : {
+            "type" : "string"
+        },
+        "recentlyDiagnosed" : {
+            "type" : "string"
+        },
+        "stillBreastfeeding" : {
+            "type" : "string"
+        },
+        "usedAnyContraceptives" : {
+            "type" : "string"
+        }
+      },
+      "required": [
+        "userName",
+        "date",
+        "type",
+        "areYouPregnant",
+        "didMenstruateThisWeek",
+        "recentlyDiagnosed",
+        "stillBreastFeeding",
+        "usedAnyContraceptives"
+      ]
+    }
+  ]
+}
+
+
+
+/*Example Querie*/
+{
+  "userName" : "tonyschndr@gmail.com",
+  "date" : "11/12/18",
+  "type" : "DailySurvey",
+  "clearBlueMonitor" : "1",
+  "experienceBleeding" : "1",
+  "menstruation" : "0",
+  "progesterone" : "1",
+  "numOfTimesBabyBreastFed" : "4",
+  "numOfTimesBabyExpressFed" : "4",
+  "numOfTimesBabyFormulaFed" : "3"
+}
+
+{
+    "userName" : "tonyschndr@gmail.com",
+    "date" : "11/12/18",
+    "type" : "WeeklySurvey",
+    "areYouPregnant" : "1",
+    "didMenstruateThisWeek" : "0",
+    "recentlyDiagnosed" : "1",
+    "stillBreastfeeding" : "0",
+    "usedAnyContraceptives" : "0"
+}
+

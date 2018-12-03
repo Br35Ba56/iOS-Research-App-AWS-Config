@@ -45,23 +45,67 @@ Resources:
                 type: string
             title: Cognito Disable User
             type: object
-          survey:
-            oneOf:
-            - additionalProperties: false
-              properties:
-                date:
-                  type: string
-                questionOne:
-                  type: string
-                required:
-                - type
-                - userName
-                - date
-                - questionOne
-                type:
-                  type: string
-                userName:
-                  type: string
+          dailysurvey:
+            properties:
+              clearBlueMonitor:
+                type: string
+              date:
+                type: string
+              experienceBleeding:
+                type: string
+              menstruation:
+                type: string
+              numOfTimesBabyBreastFed:
+                type: string
+              numOfTimesBabyExpressFed:
+                type: string
+              numOfTimesBabyFormulaFed:
+                type: string
+              progesterone:
+                type: string
+              type:
+                type: string
+              userName:
+                type: string
+            required:
+            - type
+            - userName
+            - date
+            - clearBlueMonitor
+            - experienceBleeding
+            - menstruation
+            - progesterone
+            - numOfTimesBabyBreastFed
+            - numOfTimesBabyExpressFed
+            - numOfTimesBabyFormulaFed
+            type: object
+          weeklysurvey:
+            properties:
+              areYouPregnant:
+                type: string
+              date:
+                type: string
+              didMenstruateThisWeek:
+                type: string
+              recentlyDiagnosed:
+                type: string
+              stillBreastfeeding:
+                type: string
+              type:
+                type: string
+              usedAnyContraceptives:
+                type: string
+              userName:
+                type: string
+            required:
+            - type
+            - userName
+            - date
+            - areYouPregnant
+            - didMenstruateThisWeek
+            - recentlyDiagnosed
+            - stillBreastfeeding
+            - usedAnyContraceptives
             type: object
         info:
           title: NFP Breast Feeding API
@@ -119,7 +163,7 @@ Resources:
                 uri:
                   Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations
               x-amazon-apigateway-request-validator: Validate body
-          /surveys/upload:
+          /surveys/dailysurvey/upload:
             put:
               consumes:
               - application/json
@@ -128,7 +172,59 @@ Resources:
                 name: survey
                 required: true
                 schema:
-                  $ref: '#/definitions/survey'
+                  $ref: '#/definitions/dailysurvey'
+              produces:
+              - application/json
+              responses:
+                '200':
+                  description: 200 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                '400':
+                  description: 400 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#/definitions/Error'
+                '500':
+                  description: 500 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#/definitions/Error'
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                passthroughBehavior: when_no_match
+                responses:
+                  BAD.*:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '400'
+                  INT.*:
+                    responseParamters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '500'
+                  default:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '200'
+                type: aws
+                uri:
+                  Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${UploadSurveyFunction}/invocations
+              x-amazon-apigateway-request-validator: Validate body
+          /surveys/weeklysurvey/upload:
+            put:
+              consumes:
+              - application/json
+              parameters:
+              - in: body
+                name: survey
+                required: true
+                schema:
+                  $ref: '#/definitions/weeklysurvey'
               produces:
               - application/json
               responses:
@@ -263,7 +359,7 @@ Resources:
         uploadsurvey:
           Properties:
             Method: PUT
-            Path: /surveys/upload
+            Path: /surveys/*
             RestApiId:
               Ref: Api
           Type: Api
