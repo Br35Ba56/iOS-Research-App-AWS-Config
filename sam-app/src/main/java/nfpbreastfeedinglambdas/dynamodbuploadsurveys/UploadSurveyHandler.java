@@ -5,56 +5,59 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringReader;
 import java.io.BufferedReader;
-import java.io.Writer;
+import java.io.ByteArrayInputStream;
 
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.amazonaws.services.lambda.runtime.Context; 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.cognitoidentity.AmazonCognitoIdentityClientBuilder;
-import com.amazonaws.services.cognitoidp.*;
-import com.amazonaws.services.cognitoidp.model.AdminDisableUserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.*;
+
+import nfpbreastfeedinglambdas.nfpbreastfeedingsurveys.*;
 
 
 
 public class UploadSurveyHandler implements RequestStreamHandler {
     JSONParser parser = new JSONParser();
-
+    private BreastFeedingSurveys survey;
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
     	
         LambdaLogger logger = context.getLogger();
-        logger.log("Loading Java Lambda handler of ProxyWithStream");
+        logger.log("Loading Java Lambda handler of UploadSurveyHandler");
 
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         JSONObject responseJson = new JSONObject();
-   
+        
         int responseCode = 200;
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             JSONObject event = (JSONObject)parser.parse(reader);
+            JSONObject responseBody = new JSONObject();
             logger.log(event.toJSONString());
             
             if (event.get("body") != null) {
                 JSONObject body = (JSONObject)parser.parse((String)event.get("body"));
+                InputStream stream = new ByteArrayInputStream(body.toString().getBytes());
+                try {
+                    getSurvey(body, stream, objectMapper);
+                } catch (Exception e) {
+                    logger.log(e.toString());
+                    responseCode = 400;
+                    responseBody.put("Error", event.toJSONString());
+                }
                 logger.log("JSON body"+body);
             }
             
             
-            JSONObject responseBody = new JSONObject();
+            
             responseBody.put("input", event.toJSONString());
 
             JSONObject headerJson = new JSONObject();
             headerJson.put("x-custom-header", "my custom header value");
-
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
             responseJson.put("headers", headerJson);
@@ -73,4 +76,19 @@ public class UploadSurveyHandler implements RequestStreamHandler {
         writer.write(responseJson.toJSONString());  
         writer.close();
     }
+
+    private BreastFeedingSurveys getSurvey(JSONObject body, InputStream stream, ObjectMapper objectMapper) throws Exception {
+    	if (body.get("type").toString().contains("DailySurvey")) {
+       	 survey = objectMapper.readValue(stream, DailySurvey.class);
+      
+       } else if (body.get("type").toString().contains("WeeklySurvey")) {
+       	survey = objectMapper.readValue(stream, WeeklySurvey.class);
+       
+       } else if (body.get("type").toString().contains("Onboarding")) {
+       	survey = objectMapper.readValue(stream, OnboardingSurvey.class);
+      
+       }
+    	return survey;
+    }
+
 }

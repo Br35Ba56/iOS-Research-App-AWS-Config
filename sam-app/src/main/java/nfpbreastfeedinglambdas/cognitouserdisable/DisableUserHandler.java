@@ -36,7 +36,7 @@ public class DisableUserHandler implements RequestStreamHandler {
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
     	
         LambdaLogger logger = context.getLogger();
-        logger.log("Loading Java Lambda handler of ProxyWithStream");
+        logger.log("Loading Java Lambda handler of DisableUserHandler");
 
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -46,7 +46,7 @@ public class DisableUserHandler implements RequestStreamHandler {
 
         try {
             JSONObject event = (JSONObject)parser.parse(reader);
-            logger.log("Hello, here is the event: " + event.toJSONString());
+            logger.log("Event: " + event.toJSONString());
             //logger.log(event.toJSONString());
             CognitoUser cognitoUser = new CognitoUser();
             
@@ -74,7 +74,7 @@ public class DisableUserHandler implements RequestStreamHandler {
             responseBody.put("input", event.toJSONString());
 
             JSONObject headerJson = new JSONObject();
-            headerJson.put("x-custom-header", "my custom header value");
+            headerJson.put("x-custom-header", "null");
 
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);

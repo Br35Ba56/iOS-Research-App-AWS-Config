@@ -163,7 +163,7 @@ Resources:
                 uri:
                   Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${DisableUserFunction}/invocations
               x-amazon-apigateway-request-validator: Validate body
-          /surveys/dailysurvey/upload:
+          /surveys/dailysurvey:
             put:
               consumes:
               - application/json
@@ -215,7 +215,7 @@ Resources:
                 uri:
                   Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${UploadSurveyFunction}/invocations
               x-amazon-apigateway-request-validator: Validate body
-          /surveys/weeklysurvey/upload:
+          /surveys/weeklysurvey:
             put:
               consumes:
               - application/json
@@ -338,7 +338,10 @@ Resources:
           Statement:
           - Action: dynamodb:PutItem
             Effect: Allow
-            Resource: arn:aws:dynamodb:us-east-1:551307643672:table/NFPBreastFeedingSurveyData*
+            Resource:
+              Fn::GetAtt:
+              - SurveyTable
+              - Arn
           Version: '2012-10-17'
         PolicyName: UploadSurveyToDynamoDb
       - PolicyDocument:
@@ -352,6 +355,22 @@ Resources:
           Version: '2012-10-17'
         PolicyName: LambdaBasicExecutionRole
     Type: AWS::IAM::Role
+  SurveyTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: UserName
+        AttributeType: S
+      - AttributeName: Date
+        AttributeType: S
+      KeySchema:
+      - AttributeName: UserName
+        KeyType: HASH
+      - AttributeName: Date
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: '5'
+        WriteCapacityUnits: '5'
+    Type: AWS::DynamoDB::Table
   UploadSurveyFunction:
     Properties:
       CodeUri: s3://serverlesssambucket123454321/6fa0a7290509d047a6f63ae6bd120c6e
