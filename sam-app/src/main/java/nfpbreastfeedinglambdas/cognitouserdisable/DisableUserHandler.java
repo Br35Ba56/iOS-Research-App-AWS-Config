@@ -47,19 +47,21 @@ public class DisableUserHandler implements RequestStreamHandler {
         try {
             JSONObject event = (JSONObject)parser.parse(reader);
             logger.log("Event: " + event.toJSONString());
-            //logger.log(event.toJSONString());
             CognitoUser cognitoUser = new CognitoUser();
             
-            if (event.get("body") != null) {
-                JSONObject body = (JSONObject)parser.parse((String)event.get("body"));
-                logger.log("JSON body"+body);
-                cognitoUser.setUserName(body.get("username").toString());
-                cognitoUser.setCognitoPoolID(body.get("userpool").toString());
-            }
+            
+            
+            logger.log("JSON body"+event);
+            cognitoUser.setUserName(event.get("username").toString());
+            cognitoUser.setCognitoPoolID(event.get("userpool").toString());   
+            cognitoUser.setCognitoPoolID(event.get("userpool").toString());
+            cognitoUser.setCognitoPoolID(event.get("userpool").toString());   
+            
            
             //Disable User in cognito
             boolean isDisabled = true;
             try {
+                System.out.println(cognitoUser);
                 AdminDisableUserRequest adminDisableUserRequest = new AdminDisableUserRequest();
                 adminDisableUserRequest.setUsername(cognitoUser.getUserName());
                 adminDisableUserRequest.setUserPoolId(cognitoUser.getCognitoPoolID());
@@ -121,6 +123,11 @@ public class DisableUserHandler implements RequestStreamHandler {
     	
     	public String getUserName() {
     		return userName;
-    	}
+        }
+        
+        @Override
+        public String toString() {
+            return userName + " " + cognitoPoolID;
+        }
     }
 }

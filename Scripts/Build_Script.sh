@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 terraform_dir=~/Research/Cloud/Terraform/
 terraform_out_to_app_config=~/Research/Cloud/Scripts/terraform_out_to_app_config.py
 sam_template=~/Research/Cloud/sam-app/template.yaml
@@ -45,10 +44,11 @@ fi
 
 #Build lambda java project
 
-#(
-  #cd ~/Research/Cloud/sam-app/
-  #mvn install
-#)
+(
+  cd ~/Research/Cloud/sam-app/
+  mvn clean
+  mvn install
+)
 
 sam package --template-file $sam_template --s3-bucket serverlesssambucket123454321 --output-template-file $sam_package_cf
 
@@ -62,9 +62,9 @@ select yn in "Yes" "No"; do
       Yes ) 
         echo "Fetching SDK";
         #Variables for get-sdk
-        rest_api_id=$(aws cloudformation list-exports --query "Exports[?Name==\`NFPBreastFeedingAPI\`].Value" --no-paginate --output text);
-        stage_name=NFPBreastFeedingAPI;
-
+        rest_api_id=$(aws cloudformation list-exports --query "Exports[?Name==\`NFPBreastFeedingApiID\`].Value" --no-paginate --output text);
+        stage_name=Dev;
+        echo $rest_api_id
         #Directorys for SDK
         sdk_target_dir=~/Research/iOS-Research-App/Breast\ Feeding\ NFP/APIGatewaySDK/;
 

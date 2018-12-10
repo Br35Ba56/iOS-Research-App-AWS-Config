@@ -20,13 +20,15 @@ Outputs:
       - Arn
   NFPBreastFeedingApi:
     Description: API Gateway endpoint URL for Dev stage for Disable User Function
+    Export:
+      Name: NFPBreastFeedingApiID
     Value:
-      Fn::Sub: https://${Api}.execute-api.${AWS::Region}.amazonaws.com/Dev/cognito/disableuser
+      Fn::Sub: ${Api}
 Resources:
   Api:
     Properties:
       DefinitionBody:
-        basePath: /NFPBreastFeedingAPI
+        basePath: /Dev
         definitions:
           Error:
             properties:
@@ -143,6 +145,8 @@ Resources:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
+              security:
+              - authorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 passthroughBehavior: when_no_match
@@ -195,6 +199,8 @@ Resources:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
+              security:
+              - authorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 passthroughBehavior: when_no_match
@@ -247,6 +253,8 @@ Resources:
                       type: string
                   schema:
                     $ref: '#/definitions/Error'
+              security:
+              - authorizer: []
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 passthroughBehavior: when_no_match
@@ -269,16 +277,26 @@ Resources:
               x-amazon-apigateway-request-validator: Validate body
         schemes:
         - https
+        securityDefinitions:
+          authorizer:
+            in: header
+            name: cognito-authorizer
+            type: apiKey
+            x-amazon-apigateway-authorizer:
+              providerARNs:
+              - arn:aws:cognito-idp:us-east-1:551307643672:userpool/us-east-1_hQJwqSfh6
+              type: cognito_user_pools
+            x-amazon-apigateway-authtype: cognito_user_pools
         swagger: '2.0'
         x-amazon-apigateway-request-validators:
           Validate body:
             validateRequestBody: true
             validateRequestParameters: false
-      StageName: NFPBreastFeedingAPI
+      StageName: Dev
     Type: AWS::Serverless::Api
   DisableUserFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/6fa0a7290509d047a6f63ae6bd120c6e
+      CodeUri: s3://serverlesssambucket123454321/690fb0162d352227ad145b91e79fbece
       Events:
         disableuser:
           Properties:
@@ -373,7 +391,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   UploadSurveyFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/6fa0a7290509d047a6f63ae6bd120c6e
+      CodeUri: s3://serverlesssambucket123454321/690fb0162d352227ad145b91e79fbece
       Events:
         uploadsurvey:
           Properties:

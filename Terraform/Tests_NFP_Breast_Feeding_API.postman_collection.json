@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "6fc9747b-094d-4ba2-9d16-012bb667241d",
+		"name": "NFP Breast Feeding API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cognito",
+			"item": [
+				{
+					"name": "DisableUser",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"type": "text",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"tonyschndr@gmail.com\",\n\t\"userpool\" : \"us-east-1_hQJwqSfh6\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/NFPBreastFeedingAPI/cognito/disableuser",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"NFPBreastFeedingAPI",
+								"cognito",
+								"disableuser"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for cognito"
+		},
+		{
+			"name": "surveys",
+			"item": [
+				{
+					"name": "Untitled Request",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\" : \"tonyschndr@gmail.com\",\n  \"date\" : \"11/12/18\",\n  \"type\" : \"DailySurvey\",\n  \"clearBlueMonitor\" : \"1\",\n  \"experienceBleeding\" : \"1\",\n  \"menstruation\" : \"0\",\n  \"progesterone\" : \"1\",\n  \"numOfTimesBabyBreastFed\" : \"4\",\n  \"numOfTimesBabyExpressFed\" : \"4\",\n  \"numOfTimesBabyFormulaFed\" : \"3\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/NFPBreastFeedingAPI/surveys/dailysurvey",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"NFPBreastFeedingAPI",
+								"surveys",
+								"dailysurvey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Untitled Request",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\" : \"tonyschndr@gmail.com\",\n    \"date\" : \"11/12/18\",\n    \"type\" : \"WeeklySurvey\",\n    \"areYouPregnant\" : \"1\",\n    \"didMenstruateThisWeek\" : \"0\",\n    \"recentlyDiagnosed\" : \"1\",\n    \"stillBreastfeeding\" : \"0\",\n    \"usedAnyContraceptives\" : \"0\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/NFPBreastFeedingAPI/surveys/weeklysurvey",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"NFPBreastFeedingAPI",
+								"surveys",
+								"weeklysurvey"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for surveys"
+		}
+	]
+}

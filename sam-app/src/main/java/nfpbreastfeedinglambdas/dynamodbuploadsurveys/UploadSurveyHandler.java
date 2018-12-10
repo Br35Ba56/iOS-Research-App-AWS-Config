@@ -44,7 +44,7 @@ public class UploadSurveyHandler implements RequestStreamHandler {
                 InputStream stream = new ByteArrayInputStream(body.toString().getBytes());
                 try {
                     getSurvey(body, stream, objectMapper);
-                } catch (Exception e) {
+                } catch (IOException e) {
                     logger.log(e.toString());
                     responseCode = 400;
                     responseBody.put("Error", event.toJSONString());
@@ -57,7 +57,7 @@ public class UploadSurveyHandler implements RequestStreamHandler {
             responseBody.put("input", event.toJSONString());
 
             JSONObject headerJson = new JSONObject();
-            headerJson.put("x-custom-header", "my custom header value");
+            //headerJson.put("x-custom-header", "my custom header value");
             responseJson.put("isBase64Encoded", false);
             responseJson.put("statusCode", responseCode);
             responseJson.put("headers", headerJson);
@@ -77,7 +77,7 @@ public class UploadSurveyHandler implements RequestStreamHandler {
         writer.close();
     }
 
-    private BreastFeedingSurveys getSurvey(JSONObject body, InputStream stream, ObjectMapper objectMapper) throws Exception {
+    private BreastFeedingSurveys getSurvey(JSONObject body, InputStream stream, ObjectMapper objectMapper) throws IOException  {
     	if (body.get("type").toString().contains("DailySurvey")) {
        	 survey = objectMapper.readValue(stream, DailySurvey.class);
       
