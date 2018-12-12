@@ -12,7 +12,7 @@ phases:
       - unzip terraform_0.11.10_linux_amd64.zip
       - mv terraform /usr/local/bin
       - terraform init ~/Research/Cloud/Terraform/
-      -echo $(pwd)
+      - echo $(pwd)
     finally:
       - echo This always runs even if the update or install command fails 
   pre_build:
@@ -24,7 +24,6 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Build started on `date`
-      - mvn install
     finally:
       - echo This always runs even if the install command fails
   post_build:

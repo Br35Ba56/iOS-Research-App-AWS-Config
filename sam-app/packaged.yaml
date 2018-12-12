@@ -296,7 +296,7 @@ Resources:
     Type: AWS::Serverless::Api
   DisableUserFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/690fb0162d352227ad145b91e79fbece
+      CodeUri: s3://serverlesssambucket123454321/e9675e69d9203b115cf2ae697398dd19
       Events:
         disableuser:
           Properties:
@@ -391,7 +391,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   UploadSurveyFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/690fb0162d352227ad145b91e79fbece
+      CodeUri: s3://serverlesssambucket123454321/e9675e69d9203b115cf2ae697398dd19
       Events:
         uploadsurvey:
           Properties:

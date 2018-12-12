@@ -19,5 +19,5 @@ output "aws_cognito_user_pool_client_id" {
 }
 
 output "aws_pinpoint_app_id" {
-  value = "${var.pinpointID}"
+  value = "${aws_pinpoint_app.pinpoint_app.application_id}"
 }

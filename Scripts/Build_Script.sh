@@ -2,7 +2,7 @@
 
 terraform_dir=~/Research/Cloud/Terraform/
 terraform_out_to_app_config=~/Research/Cloud/Scripts/terraform_out_to_app_config.py
-sam_template=~/Research/Cloud/sam-app/template.yaml
+sam_template=~/Research/Cloud/sam-app/template.yamlt
 sam_package_cf=~/Research/Cloud/sam-app/packaged.yaml
 
 #Check if terrafrom.tfvar exists and has valid pinpoint app

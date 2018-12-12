@@ -174,7 +174,10 @@ resource "aws_iam_role_policy" "authenticated_mobile_analytics" {
 
   policy = "${data.aws_iam_policy_document.pinpoint_put_events.json}"
 }
-variable "pinpointID" {}
+resource "aws_pinpoint_app" "pinpoint_app" {
+  name = "pinpoint_app"
+}
+
 
 data "aws_iam_policy_document" "pinpoint_put_events" {
   statement {
@@ -191,7 +194,7 @@ data "aws_iam_policy_document" "pinpoint_put_events" {
       "mobiletargeting:UpdateEndpoint"
     ]
     resources = [
-      "arn:aws:mobiletargeting:*:551307643672:apps/${var.pinpointID}"
+      "arn:aws:mobiletargeting:*:551307643672:apps/${aws_pinpoint_app.pinpoint_app.application_id}"
     ]
   }
 }
