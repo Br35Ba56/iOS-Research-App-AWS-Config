@@ -12,7 +12,7 @@ phases:
       - unzip terraform_0.11.10_linux_amd64.zip
       - mv terraform /usr/local/bin
       - terraform init ~/Research/Cloud/Terraform/
-      - echo pwd
+      - pwd
     finally:
       - echo This always runs even if the update or install command fails 
   pre_build:
