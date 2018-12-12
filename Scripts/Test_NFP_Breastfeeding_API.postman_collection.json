@@ -1,0 +1,266 @@
+{
+	"info": {
+		"_postman_id": "6fc9747b-094d-4ba2-9d16-012bb667241d",
+		"name": "NFP Breast Feeding API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cognito",
+			"item": [
+				{
+					"name": "DisableUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "17243668-9af1-4859-a635-e6e6f29abc4b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "636e5f8e-2d69-4004-a00b-4ee4d834aa28",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"true\");",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"type": "text",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\" : \"{{test_user}}\",\n\t\"userpool\" : \"{{user_pool}}\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/Dev/cognito/disableuser",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"Dev",
+								"cognito",
+								"disableuser"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for cognito",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "84b2e2b1-3607-4e9d-ba01-874acc686e24",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "34c23fee-fdfa-4e99-9b2f-d22ddaec3586",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "surveys",
+			"item": [
+				{
+					"name": "DailySurvey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "33085060-418c-4f62-89cf-a80a19f928cb",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"true\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\" : \"tonyschndr@gmail.com\",\n  \"date\" : \"11/12/18\",\n  \"type\" : \"DailySurvey\",\n  \"clearBlueMonitor\" : \"1\",\n  \"experienceBleeding\" : \"1\",\n  \"menstruation\" : \"0\",\n  \"progesterone\" : \"1\",\n  \"numOfTimesBabyBreastFed\" : \"4\",\n  \"numOfTimesBabyExpressFed\" : \"4\",\n  \"numOfTimesBabyFormulaFed\" : \"3\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/Dev/surveys/dailysurvey",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"Dev",
+								"surveys",
+								"dailysurvey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "WeeklySurvey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "11c58366-a98f-4809-b0dd-f1c2c87888e9",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Body matches string\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"true\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "cognito-authorizer",
+								"type": "text",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userName\" : \"tonyschndr@gmail.com\",\n    \"date\" : \"11/12/18\",\n    \"type\" : \"WeeklySurvey\",\n    \"areYouPregnant\" : \"1\",\n    \"didMenstruateThisWeek\" : \"0\",\n    \"recentlyDiagnosed\" : \"1\",\n    \"stillBreastfeeding\" : \"0\",\n    \"usedAnyContraceptives\" : \"0\"\n}"
+						},
+						"url": {
+							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/Dev/surveys/weeklysurvey",
+							"protocol": "https",
+							"host": [
+								"mj0tgk043g",
+								"execute-api",
+								"us-east-1",
+								"amazonaws",
+								"com"
+							],
+							"path": [
+								"Dev",
+								"surveys",
+								"weeklysurvey"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for surveys"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "77496b6b-557f-4473-b758-5caa7ec23929",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b0ec3388-3965-4901-9599-da4ef2a84cd7",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
