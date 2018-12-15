@@ -391,7 +391,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   UploadSurveyFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/nfp-serverless-functions
+      CodeUri: s3://serverlesssambucket123454321/NFPBreastFeedingLambdaFunctions-1.0.0.jar
       Events:
         uploadsurvey:
           Properties:
