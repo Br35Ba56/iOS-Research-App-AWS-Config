@@ -7,7 +7,7 @@ import string
 
 terraform_variables = sys.argv[1]
 config_file = os.path.expanduser("~/Research/Cloud/NFPAppConfig/AWS_Config.swift")
-output_file = os.path.expanduser("~/Research/iOS-Research-App/Breast Feeding NFP/DoNotCommit.swift")
+output_file = os.path.expanduser("~/Research/iOS-Research-App/Breast Feeding NFP/Login/DoNotCommit.swift")
 
 output_values = dict(item.split("=") for item in terraform_variables.split("\n"))
 

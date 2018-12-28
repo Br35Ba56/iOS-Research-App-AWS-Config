@@ -81,6 +81,71 @@ Resources:
             - numOfTimesBabyExpressFed
             - numOfTimesBabyFormulaFed
             type: object
+          onboardingsurvey:
+            properties:
+              babyBirthDate:
+                type: string
+              babyFeedOnDemand:
+                type: string
+              babyFullTerm:
+                type: string
+              biologicalInfant:
+                type: string
+              biologicalSex:
+                type: string
+              breastPumpInfo:
+                type: string
+              breastSurgery:
+                type: string
+              canReadEnglish:
+                type: string
+              clearBlueMonitor:
+                type: string
+              date:
+                type: string
+              ethnicity:
+                type: string
+              howLongInPastBreastFed:
+                type: string
+              howManyChildrenBreastFed:
+                type: string
+              howManyTimesPregnant:
+                type: string
+              infantAgeInRange:
+                type: string
+              levelOfEducation:
+                type: string
+              marriedLength:
+                type: string
+              momHealth:
+                type: string
+              participantAgeInRange:
+                type: string
+              type:
+                type: string
+              userName:
+                type: string
+            required:
+            - babyBirthDate
+            - babyFeedOnDemand
+            - babyFullTerm
+            - biologicalInfant
+            - biologicalSex
+            - breastPumpInfo
+            - breastSurgery
+            - canReadEnglish
+            - clearBlueMonitor
+            - date
+            - ethnicity
+            - howLongInPastBreastFed
+            - howManyBiologicalChildren
+            - howManyChildrenBreastFed
+            - howManyTimesPregnant
+            - infantAgeInRange
+            - levelOfEducation
+            - momHealth
+            - participantAgeInRange
+            type: object
           weeklysurvey:
             properties:
               areYouPregnant:
@@ -210,7 +275,61 @@ Resources:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
                     statusCode: '400'
                   INT.*:
-                    responseParamters:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '500'
+                  default:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '200'
+                type: aws
+                uri:
+                  Fn::Sub: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:551307643672:function:${UploadSurveyFunction}/invocations
+              x-amazon-apigateway-request-validator: Validate body
+          /surveys/onboardingsurvey:
+            put:
+              consumes:
+              - application/json
+              parameters:
+              - in: body
+                name: survey
+                required: true
+                schema:
+                  $ref: '#/definitions/onboardingsurvey'
+              produces:
+              - application/json
+              responses:
+                '200':
+                  description: 200 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                '400':
+                  description: 400 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#definitions/Error'
+                '500':
+                  description: 500 response
+                  headers:
+                    Access-Control-Allow-Origin:
+                      type: string
+                  schema:
+                    $ref: '#/definitions/Error'
+              security:
+              - authorizer: []
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                passthroughBehavior: when_no_match
+                responses:
+                  BAD.*:
+                    responseParameters:
+                      method.response.header.Access-Control-Allow-Origin: '''*'''
+                    statusCode: '400'
+                  INT.*:
+                    responseParameters:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
                     statusCode: '500'
                   default:
@@ -264,7 +383,7 @@ Resources:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
                     statusCode: '400'
                   INT.*:
-                    responseParamters:
+                    responseParameters:
                       method.response.header.Access-Control-Allow-Origin: '''*'''
                     statusCode: '500'
                   default:
@@ -284,7 +403,7 @@ Resources:
             type: apiKey
             x-amazon-apigateway-authorizer:
               providerARNs:
-              - arn:aws:cognito-idp:us-east-1:551307643672:userpool/us-east-1_hQJwqSfh6
+              - arn:aws:cognito-idp:us-east-1:551307643672:userpool/us-east-1_tWkcoC4MS
               type: cognito_user_pools
             x-amazon-apigateway-authtype: cognito_user_pools
         swagger: '2.0'
@@ -296,7 +415,7 @@ Resources:
     Type: AWS::Serverless::Api
   DisableUserFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/e9675e69d9203b115cf2ae697398dd19
+      CodeUri: s3://serverlesssambucket123454321/b61d4bef1ccc760cef3fbcc2555f9683
       Events:
         disableuser:
           Properties:
@@ -391,7 +510,7 @@ Resources:
     Type: AWS::DynamoDB::Table
   UploadSurveyFunction:
     Properties:
-      CodeUri: s3://serverlesssambucket123454321/NFPBreastFeedingLambdaFunctions-1.0.0.jar
+      CodeUri: s3://serverlesssambucket123454321/b61d4bef1ccc760cef3fbcc2555f9683
       Events:
         uploadsurvey:
           Properties:
