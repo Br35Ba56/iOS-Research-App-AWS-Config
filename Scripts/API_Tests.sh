@@ -55,7 +55,7 @@ python set_up_api_variables.py "$(aws cognito-idp admin-respond-to-auth-challeng
   --challenge-response USERNAME=$user_name,NEW_PASSWORD=Passw0rd# \
   --session $session )" $user_pool $user_name_1
 
-newman run Test_NFP_Breastfeeding_API.postman_collection.json -d variables.json
+newman run Test_NFP_Breast_Feeding_API.postman_collection.json -d variables.json
 
 echo "delete test users"
 aws cognito-idp admin-delete-user \

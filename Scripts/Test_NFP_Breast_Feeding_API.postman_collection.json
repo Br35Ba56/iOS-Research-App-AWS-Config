@@ -156,10 +156,10 @@
 							"raw": "{\n  \"userName\" : \"tonyschndr@gmail.com\",\n  \"date\" : \"11/12/18\",\n  \"type\" : \"DailySurvey\",\n  \"clearBlueMonitor\" : \"1\",\n  \"experienceBleeding\" : \"1\",\n  \"menstruation\" : \"0\",\n  \"progesterone\" : \"1\",\n  \"numOfTimesBabyBreastFed\" : \"4\",\n  \"numOfTimesBabyExpressFed\" : \"4\",\n  \"numOfTimesBabyFormulaFed\" : \"3\"\n}"
 						},
 						"url": {
-							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/Dev/surveys/dailysurvey",
+							"raw": "https://t3pzdswa0j.execute-api.us-east-1.amazonaws.com/Dev/surveys/dailysurvey",
 							"protocol": "https",
 							"host": [
-								"mj0tgk043g",
+								"t3pzdswa0j",
 								"execute-api",
 								"us-east-1",
 								"amazonaws",
@@ -219,10 +219,10 @@
 							"raw": "{\n    \"userName\" : \"tonyschndr@gmail.com\",\n    \"date\" : \"11/12/18\",\n    \"type\" : \"WeeklySurvey\",\n    \"areYouPregnant\" : \"1\",\n    \"didMenstruateThisWeek\" : \"0\",\n    \"recentlyDiagnosed\" : \"1\",\n    \"stillBreastfeeding\" : \"0\",\n    \"usedAnyContraceptives\" : \"0\"\n}"
 						},
 						"url": {
-							"raw": "https://mj0tgk043g.execute-api.us-east-1.amazonaws.com/Dev/surveys/weeklysurvey",
+							"raw": "https://t3pzdswa0j.execute-api.us-east-1.amazonaws.com/Dev/surveys/weeklysurvey",
 							"protocol": "https",
 							"host": [
-								"mj0tgk043g",
+								"t3pzdswa0j",
 								"execute-api",
 								"us-east-1",
 								"amazonaws",
@@ -278,7 +278,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"babyBirthDate\": \"11/22/18\",\n\t\"babyFeedOnDemand\" : \"1\",\n\t\"babyFullTerm\" : \"1\",\n\t\"biologicalInfant\" : \"1\",\n\t\"biologicalSex\" : \"1\",\n\t\"breastPumpInfo\" : \"none\",\n\t\"breastSurgery\" : \"0\",\n\t\"canReadEnglish\" : \"1\",\n\t\"date\" : \"12/30/18\",\n\t\"ethnicity\" : \"0\",\n\t\"howLongInPastBreastFed\" : \"4\",\n\t\"howManyBiologicalChildren\" : \"3\",\n\t\"howManyChildrenBreastFed\" : \"2\",\n\t\"howManyTimesPregnant\" : \"3\",\n\t\"infantAgeInRange\" : \"1\",\n\t\"levelOfEducation\" : \"1\",\n\t\"marriedLength\" : \"3\",\n\t\"momHealth\" : \"1\",\n\t\"participantAgeInRange\" : \"1\"\n}"
+							"raw": "{\n\t\"babyBirthDate\": \"11/22/18\",\n\t\"babyFeedOnDemand\" : \"1\",\n\t\"babyFullTerm\" : \"1\",\n\t\"biologicalInfant\" : \"1\",\n\t\"biologicalSex\" : \"1\",\n\t\"breastPumpInfo\" : \"none\",\n\t\"breastSurgery\" : \"0\",\n\t\"canReadEnglish\" : \"1\",\n\t\"clearBlueMonitor\" : \"1\",\n\t\"date\" : \"12/30/18\",\n\t\"ethnicity\" : \"0\",\n\t\"howLongInPastBreastFed\" : \"4\",\n\t\"howManyBiologicalChildren\" : \"3\",\n\t\"howManyChildrenBreastFed\" : \"2\",\n\t\"howManyTimesPregnant\" : \"3\",\n\t\"infantAgeInRange\" : \"1\",\n\t\"levelOfEducation\" : \"1\",\n\t\"marriedLength\" : \"3\",\n\t\"momHealth\" : \"1\",\n\t\"participantAgeInRange\" : \"1\"\n}"
 						},
 						"url": {
 							"raw": "https://t3pzdswa0j.execute-api.us-east-1.amazonaws.com/Dev/surveys/onboardingsurvey",

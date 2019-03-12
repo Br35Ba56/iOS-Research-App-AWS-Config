@@ -68,7 +68,6 @@ public class UploadSurveyHandler implements RequestStreamHandler {
         } catch(ParseException pex) {
             responseJson.put("statusCode", 403);
             responseJson.put("exception", pex);
-            
         }
 
         logger.log(responseJson.toJSONString());
